@@ -1,11 +1,42 @@
 {% extends 'yearbook/base.html' %}
 
 {% block content %}
-    <h1>2025 Mezunları Yıllığına Hoş Geldiniz!</h1>
-    <p>
-        Bu sitede 2025 yılı mezunlarının anılarını okuyabilir ve kendi anılarınızı paylaşabilirsiniz.
-    </p>
-    <p>
-        <a href="{% url 'class_list' %}">Mezun Sınıflarını Görüntüle</a>
-    </p>
-{% endblock %}
+<div class="container mt-4">
+    <div class="p-5 mb-4 bg-light rounded-3">
+        <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold">2025 Mezunları Yıllığına Hoş Geldiniz!</h1>
+            <p class="col-md-8 fs-4">
+                Bu sitede 2025 yılı mezunlarının anılarını okuyabilir ve kendi anılarınızı paylaşabilirsiniz.
+            </p>
+        </div>
+    </div>
+
+    <h2 class="mt-5 mb-3">2025 Mezunları</h2>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+        {% for student in students %}
+        <div class="col">
+            <div class="card h-100 text-center shadow-sm">
+                <a href="{% url 'student_detail' student.id %}" class="text-decoration-none text-dark">
+                    {% if student.profile_picture %}
+                        <img src="{{ student.profile_picture.url }}" class="card-img-top" alt="{{ student.first_name }}" style="height: 200px; object-fit: cover;">
+                    {% else %}
+                        <div class="d-flex align-items-center justify-content-center" style="height: 200px; background-color: #f8f9fa;">
+                            <p class="mb-0">Fotoğraf Yok</p>
+                        </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ student.first_name }} {{ student.last_name }}</h5>
+                    </div>
+                </a>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">
+                Henüz sisteme bir öğrenci eklenmemiş.
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %} 

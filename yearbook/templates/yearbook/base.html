@@ -2,17 +2,29 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>2025 Mezunları Yıllığı</title>
-    </head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
 <body>
-    <nav>
-        <a href="{% url 'home' %}">Ana Sayfa</a> |
-        <a href="{% url 'class_list' %}">Sınıflar</a>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">2025 Yıllığı</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
     </nav>
-    <hr>
-    <main>
+    
+    <main class="container mt-4">
         {% block content %}
         {% endblock %}
     </main>
+
+    <footer class="text-center mt-5 py-3 bg-light">
+        <p>&copy; 2025 Mezunları</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

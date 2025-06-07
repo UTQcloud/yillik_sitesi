@@ -1,25 +1,59 @@
 {% extends 'yearbook/base.html' %}
 
 {% block content %}
-    <h1>{{ student.first_name }} {{ student.last_name }}</h1>
-    {% if student.profile_picture %}
-        <img src="{{ student.profile_picture.url }}" alt="{{ student.first_name }}" width="250">
-    {% endif %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-4 text-center">
+            {% if student.profile_picture %}
+                <img src="{{ student.profile_picture.url }}" alt="{{ student.first_name }}" class="img-fluid rounded-circle shadow-sm mb-4" style="width: 250px; height: 250px; object-fit: cover;">
+            {% endif %}
 
-    <h2>Hakkında</h2>
-    <p>{{ student.bio|linebreaks }}</p>
+            <div class="row">
+                {% if student.white_coat_photo %}
+                <div class="col">
+                    <h5 class="mt-2" style="font-size: 1rem;">Beyaz Önlük Töreni</h5>
+                    <img src="{{ student.white_coat_photo.url }}" alt="{{ student.first_name }} Beyaz Önlük" class="img-fluid rounded shadow-sm">
+                </div>
+                {% endif %}
 
-    <hr>
-
-    <h2>Anılar</h2>
-    {% for memory in memories %}
-        <div>
-            <p>"{{ memory.text }}"</p>
-            <small>- {{ memory.author.username }}</small>
+                {% if student.your_choice_photo %}
+                <div class="col">
+                    <h5 class="mt-2" style="font-size: 1rem;">Kendi Seçimi</h5>
+                    <img src="{{ student.your_choice_photo.url }}" alt="{{ student.first_name }}" class="img-fluid rounded shadow-sm">
+                </div>
+                {% endif %}
+            </div>
         </div>
-        <hr>
-    {% empty %}
-        <p>Henüz hakkında bir anı yazılmamış.</p>
-    {% endfor %}
 
-    {% endblock %}
+        <div class="col-md-8">
+            <h1 class="display-4">{{ student.first_name }} {{ student.last_name }}</h1>
+            <p class="text-muted">2025 Dönemi Mezunu</p>
+            
+            <div class="mt-4">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>Düşündüğü Uzmanlık:</strong> {{ student.future_specialization|default:"Belirtilmemiş" }}</li>
+                    <li class="list-group-item"><strong>En Sevdiği Staj:</strong> {{ student.favorite_rotation|default:"Belirtilmemiş" }}</li>
+                    <li class="list-group-item"><strong>Fakültedeki Unutulmaz Anısı:</strong> {{ student.memorable_moment|linebreaksbr|default:"Belirtilmemiş" }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <hr class="my-5">
+
+    <h2 class="mb-4">Hakkında Yazılan Anılar</h2>
+    <div class="list-group">
+    {% for memory in memories %}
+        <div class="list-group-item list-group-item-action flex-column align-items-start">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">{{ memory.author.username }}</h5>
+                <small>{{ memory.created_at|date:"d.m.Y" }}</small>
+            </div>
+            <p class="mb-1">"{{ memory.text|linebreaks }}"</p>
+        </div>
+    {% empty %}
+        <div class="alert alert-secondary">Henüz hakkında bir anı yazılmamış.</div>
+    {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -6,17 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}KOÜ Tıp Fakültesi 2025 Mezunları{% endblock %}</title>
     
-    <!-- Bootstrap CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link href="{% static 'yearbook/css/custom.css' %}" rel="stylesheet">
+    <link href="{% static 'yearbook/css/costum.css' %}" rel="stylesheet">
     
     {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container">
             <a class="navbar-brand" href="{% url 'home' %}">
@@ -34,7 +30,7 @@
                         <a class="nav-link" href="{% url 'student_list' %}"><i class="fas fa-users me-1"></i>Mezunlar</a>
                     </li>
                 </ul>
-    
+
                 <ul class="navbar-nav">
                     {% if user.is_authenticated %}
                         <li class="nav-item dropdown">
@@ -60,7 +56,6 @@
             </div>
         </div>
     </nav>
-    <!-- Messages -->
     {% if messages %}
         <div class="container mt-3">
             {% for message in messages %}
@@ -81,13 +76,11 @@
         </div>
     {% endif %}
 
-    <!-- Main Content -->
     <main>
         {% block content %}
         {% endblock %}
     </main>
 
-    <!-- Footer -->
     <footer class="site-footer">
         <div class="container">
             <div class="row">
@@ -107,7 +100,6 @@
         </div>
     </footer>
 
-    <!-- Bootstrap JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     
     {% block extra_js %}{% endblock %}

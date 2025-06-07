@@ -435,10 +435,19 @@ main {
 }
 
 /* ===== FOOTER ===== */
-footer {
-    background: linear-gradient(135deg, var(--dark-color) 0%, #334155 100%) !important;
+/* YENİ FOOTER KURALI */
+.site-footer {
+    background: linear-gradient(135deg, var(--dark-color) 0%, #334155 100%);
     box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
     margin-top: 4rem !important;
+    color: var(--white); /* Ana metin rengini burada belirliyoruz */
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+/* Footer içindeki soluk renkli yazıların okunabilirliğini artırmak için */
+.site-footer .text-muted {
+    color: var(--gray-400) !important;
 }
 
 /* ===== RESPONSİVE TASARIM ===== */

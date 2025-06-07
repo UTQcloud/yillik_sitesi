@@ -2,39 +2,45 @@
 
 {% block content %}
 <div class="container mt-5">
-    <div class="row">
-        <div class="col-md-4 text-center">
-            {% if student.profile_picture %}
-                <img src="{{ student.profile_picture.url }}" alt="{{ student.first_name }}" class="img-fluid rounded-circle shadow-sm mb-4" style="width: 250px; height: 250px; object-fit: cover;">
-            {% endif %}
-
-            <div class="row">
-                {% if student.white_coat_photo %}
-                <div class="col">
-                    <h5 class="mt-2" style="font-size: 1rem;">Beyaz Önlük Töreni</h5>
-                    <img src="{{ student.white_coat_photo.url }}" alt="{{ student.first_name }} Beyaz Önlük" class="img-fluid rounded shadow-sm">
-                </div>
+    <div class="card p-4 shadow-sm">
+        <div class="row">
+            <div class="col-md-4 text-center">
+                {% if student.profile_picture %}
+                    <img src="{{ student.profile_picture.url }}" alt="{{ student.first_name }}" class="img-fluid rounded-circle shadow-lg student-detail-img mb-4">
+                {% else %}
+                    <div class="d-flex align-items-center justify-content-center rounded-circle shadow-lg student-detail-img mb-4 bg-secondary text-white">
+                        <h3 class="mb-0">{{ student.first_name.0 }}{{ student.last_name.0 }}</h3>
+                    </div>
                 {% endif %}
 
-                {% if student.your_choice_photo %}
-                <div class="col">
-                    <h5 class="mt-2" style="font-size: 1rem;">Kendi Seçimi</h5>
-                    <img src="{{ student.your_choice_photo.url }}" alt="{{ student.first_name }}" class="img-fluid rounded shadow-sm">
+                <div class="row g-2">
+                    {% if student.white_coat_photo %}
+                    <div class="col">
+                        <h6 class="mt-2 text-muted">Beyaz Önlük Töreni</h6>
+                        <img src="{{ student.white_coat_photo.url }}" alt="{{ student.first_name }} Beyaz Önlük" class="img-fluid rounded shadow-sm sub-image">
+                    </div>
+                    {% endif %}
+
+                    {% if student.your_choice_photo %}
+                    <div class="col">
+                        <h6 class="mt-2 text-muted">Kendi Seçimi</h6>
+                        <img src="{{ student.your_choice_photo.url }}" alt="{{ student.first_name }}" class="img-fluid rounded shadow-sm sub-image">
+                    </div>
+                    {% endif %}
                 </div>
-                {% endif %}
             </div>
-        </div>
 
-        <div class="col-md-8">
-            <h1 class="display-4">{{ student.first_name }} {{ student.last_name }}</h1>
-            <p class="text-muted">2025 Dönemi Mezunu</p>
-            
-            <div class="mt-4">
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item"><strong>Düşündüğü Uzmanlık:</strong> {{ student.future_specialization|default:"Belirtilmemiş" }}</li>
-                    <li class="list-group-item"><strong>En Sevdiği Staj:</strong> {{ student.favorite_rotation|default:"Belirtilmemiş" }}</li>
-                    <li class="list-group-item"><strong>Fakültedeki Unutulmaz Anısı:</strong> {{ student.memorable_moment|linebreaksbr|default:"Belirtilmemiş" }}</li>
-                </ul>
+            <div class="col-md-8">
+                <h1 class="display-4">{{ student.first_name }} {{ student.last_name }}</h1>
+                <p class="text-muted fs-5">2025 Dönemi Tıp Fakültesi Mezunu</p>
+                
+                <div class="mt-4">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item px-0"><strong>Düşündüğü Uzmanlık:</strong> {{ student.future_specialization|default:"Belirtilmemiş" }}</li>
+                        <li class="list-group-item px-0"><strong>En Sevdiği Staj:</strong> {{ student.favorite_rotation|default:"Belirtilmemiş" }}</li>
+                        <li class="list-group-item px-0"><strong>Fakültedeki Unutulmaz Anısı:</strong><br>{{ student.memorable_moment|linebreaksbr|default:"Belirtilmemiş" }}</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
@@ -45,7 +51,7 @@
     
     {% if user.is_authenticated and user != student.user %}
         {% if not has_commented %}
-            <div class="card mb-4">
+            <div class="card mb-4 shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title">{{ student.first_name }} için bir anı bırak</h5>
                     <form method="post">
@@ -63,18 +69,18 @@
 
     {% elif not user.is_authenticated %}
         <div class="alert alert-info">
-            Anı bırakabilmek için lütfen <a href="{% url 'login' %}">giriş yapın</a>.
+            Anı bırakabilmek için lütfen <a href="{% url 'login' %}" class="alert-link">giriş yapın</a>.
         </div>
     {% endif %}
 
     <div class="list-group">
     {% for memory in memories %}
-        <div class="list-group-item list-group-item-action flex-column align-items-start">
+        <div class="list-group-item list-group-item-action flex-column align-items-start shadow-sm">
             <div class="d-flex w-100 justify-content-between">
                 <h5 class="mb-1">{{ memory.author.first_name }} {{ memory.author.last_name }}</h5>
-                <small>{{ memory.created_at|date:"d.m.Y" }}</small>
+                <small class="text-muted">{{ memory.created_at|date:"d F Y" }}</small>
             </div>
-            <p class="mb-1">"{{ memory.text|linebreaks }}"</p>
+            <p class="mb-1 fst-italic">"{{ memory.text|linebreaks }}"</p>
             {% if user.is_authenticated and user == memory.author %}
                 <div class="mt-2">
                     <a href="{% url 'edit_memory' memory.id %}" class="btn btn-sm btn-outline-primary">Düzenle</a>

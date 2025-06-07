@@ -118,6 +118,7 @@ def edit_memory_view(request, memory_id):
     }
     return render(request, 'yearbook/edit_memory.html', context)
 
+
 @login_required
 def delete_memory_view(request, memory_id):
     memory = get_object_or_404(Memory, id=memory_id)
@@ -131,4 +132,4 @@ def delete_memory_view(request, memory_id):
         messages.success(request, 'Anınız başarıyla silindi.')
         return redirect('student_detail', student_id=memory.student.id)
     
-    return render(request, 'yearbook/confirm_delete_memory.html', {'memory': memory})
+    return render(request, 'yearbook/confirm_memory.html', {'memory': memory})

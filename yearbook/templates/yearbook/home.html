@@ -1,0 +1,11 @@
+{% extends 'yearbook/base.html' %}
+
+{% block content %}
+    <h1>2025 Mezunları Yıllığına Hoş Geldiniz!</h1>
+    <p>
+        Bu sitede 2025 yılı mezunlarının anılarını okuyabilir ve kendi anılarınızı paylaşabilirsiniz.
+    </p>
+    <p>
+        <a href="{% url 'class_list' %}">Mezun Sınıflarını Görüntüle</a>
+    </p>
+{% endblock %}

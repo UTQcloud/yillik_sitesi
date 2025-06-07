@@ -1,19 +1,277 @@
 {% extends 'yearbook/base.html' %}
 
 {% block content %}
-    <h1>{{ school_class.name }} Sınıfı Öğrencileri</h1>
-    <div class="student-grid">
-    {% for student in students %}
-        <div>
-            <a href="{% url 'student_detail' student.id %}">
-                {% if student.profile_picture %}
-                    <img src="{{ student.profile_picture.url }}" alt="{{ student.first_name }}" width="150">
-                {% endif %}
-                <p>{{ student.first_name }} {{ student.last_name }}</p>
-            </a>
+<div class="container mt-5">
+    <!-- Başlık ve Arama -->
+    <div class="hero-section p-4 mb-5 fade-in-up">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="display-5 text-gradient mb-3">
+                    <i class="fas fa-users me-3"></i>2025 Mezunları
+                </h1>
+                <p class="hero-description mb-0">
+                    Tıp Fakültesi mezunlarımızın tam listesi. Arkadaşlarınızı bulun ve anılarınızı paylaşın.
+                </p>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <div class="d-flex align-items-center justify-content-md-end">
+                    <span class="badge bg-primary rounded-pill fs-6 px-3 py-2">
+                        <i class="fas fa-graduation-cap me-2"></i>{{ students|length }} Mezun
+                    </span>
+                </div>
+            </div>
         </div>
-    {% empty %}
-        <p>Bu sınıfta henüz öğrenci yok.</p>
-    {% endfor %}
     </div>
+
+    <!-- Arama ve Filtreleme -->
+    <div class="card mb-4 slide-in-left">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-8">
+                    <div class="position-relative">
+                        <input type="text" id="searchInput" class="form-control ps-5" placeholder="İsim veya soyisim ile ara..." autocomplete="off">
+                        <i class="fas fa-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <select id="sortSelect" class="form-select">
+                        <option value="name-asc">İsim (A-Z)</option>
+                        <option value="name-desc">İsim (Z-A)</option>
+                        <option value="recent">Son Eklenen</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Öğrenci Listesi -->
+    <div class="row g-4" id="studentGrid">
+        {% for student in students %}
+        <div class="col-lg-3 col-md-4 col-sm-6 student-card slide-in-left" 
+             data-name="{{ student.first_name|lower }} {{ student.last_name|lower }}"
+             data-specialty="{{ student.future_specialization|lower|default:'' }}">
+            
+            <div class="card h-100 position-relative">
+                <!-- Profil Resmi -->
+                <div class="position-relative overflow-hidden">
+                    {% if student.profile_picture %}
+                        <img src="{{ student.profile_picture.url }}" 
+                             class="card-img-top" 
+                             alt="{{ student.first_name }} {{ student.last_name }}"
+                             style="height: 280px; object-fit: cover;">
+                    {% else %}
+                        <div class="card-img-top d-flex align-items-center justify-content-center text-gradient" 
+                             style="height: 280px; background: linear-gradient(135deg, var(--gray-100), var(--white)); font-size: 3rem; font-weight: bold;">
+                            {{ student.first_name.0 }}{{ student.last_name.0 }}
+                        </div>
+                    {% endif %}
+                    
+                    <!-- Overlay Bilgileri -->
+                    <div class="position-absolute bottom-0 start-0 end-0 p-3" 
+                         style="background: linear-gradient(transparent, rgba(0,0,0,0.7));">
+                        <h5 class="text-white mb-1 fw-semibold">
+                            {{ student.first_name }} {{ student.last_name }}
+                        </h5>
+                        {% if student.future_specialization %}
+                            <p class="text-white-50 small mb-0">
+                                <i class="fas fa-stethoscope me-1"></i>{{ student.future_specialization }}
+                            </p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Kart İçeriği -->
+                <div class="card-body">
+                    <div class="row g-2 text-center">
+                        {% if student.favorite_rotation %}
+                            <div class="col-12">
+                                <small class="text-muted">
+                                    <i class="fas fa-star text-warning me-1"></i>
+                                    <strong>En Sevdiği Staj:</strong> {{ student.favorite_rotation }}
+                                </small>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="col-12 mt-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">
+                                    <i class="fas fa-comments me-1"></i>
+                                    {{ student.memory_count|default:0 }} anı
+                                </small>
+                                <a href="{% url 'student_detail' student.id %}" 
+                                   class="btn btn-primary btn-sm">
+                                    <i class="fas fa-eye me-1"></i>Profil
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alt Fotoğraflar Önizlemesi -->
+                {% if student.white_coat_photo or student.your_choice_photo %}
+                    <div class="card-footer bg-light">
+                        <div class="row g-2">
+                            {% if student.white_coat_photo %}
+                                <div class="col-6">
+                                    <small class="text-muted d-block text-center mb-1">
+                                        <i class="fas fa-user-md"></i> Beyaz Önlük
+                                    </small>
+                                    <img src="{{ student.white_coat_photo.url }}" 
+                                         alt="Beyaz Önlük" 
+                                         class="w-100 rounded" 
+                                         style="height: 60px; object-fit: cover;">
+                                </div>
+                            {% endif %}
+                            {% if student.your_choice_photo %}
+                                <div class="col-6">
+                                    <small class="text-muted d-block text-center mb-1">
+                                        <i class="fas fa-camera"></i> Serbest
+                                    </small>
+                                    <img src="{{ student.your_choice_photo.url }}" 
+                                         alt="Serbest Fotoğraf" 
+                                         class="w-100 rounded" 
+                                         style="height: 60px; object-fit: cover;">
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="text-center py-5">
+                <div class="text-muted mb-3">
+                    <i class="fas fa-user-friends fa-4x"></i>
+                </div>
+                <h4 class="text-muted">Henüz mezun eklenmemiş</h4>
+                <p class="text-muted">İlk mezunu ekleyen siz olun!</p>
+                {% if user.is_staff %}
+                    <a href="/admin/" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Mezun Ekle
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Sonuç Bulunamadı Mesajı -->
+    <div id="noResults" class="text-center py-5" style="display: none;">
+        <div class="text-muted mb-3">
+            <i class="fas fa-search fa-4x"></i>
+        </div>
+        <h4 class="text-muted">Arama kriterlerinize uygun mezun bulunamadı</h4>
+        <p class="text-muted">Farklı anahtar kelimeler deneyebilirsiniz.</p>
+    </div>
+
+    <!-- Sayfalama (eğer gerekirse) -->
+    {% if students.has_other_pages %}
+        <nav aria-label="Sayfa navigasyonu" class="mt-5">
+            <ul class="pagination justify-content-center">
+                {% if students.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1">
+                            <i class="fas fa-angle-double-left"></i>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ students.previous_page_number }}">
+                            <i class="fas fa-angle-left"></i>
+                        </a>
+                    </li>
+                {% endif %}
+                
+                {% for num in students.paginator.page_range %}
+                    {% if students.number == num %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ num }}</span>
+                        </li>
+                    {% elif num > students.number|add:'-3' and num < students.number|add:'3' %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if students.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ students.next_page_number }}">
+                            <i class="fas fa-angle-right"></i>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ students.paginator.num_pages }}">
+                            <i class="fas fa-angle-double-right"></i>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const sortSelect = document.getElementById('sortSelect');
+    const studentGrid = document.getElementById('studentGrid');
+    const noResults = document.getElementById('noResults');
+    const studentCards = Array.from(document.querySelectorAll('.student-card'));
+
+    function filterAndSort() {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        const sortOption = sortSelect.value;
+        
+        // Filtreleme
+        let visibleCards = studentCards.filter(card => {
+            const name = card.dataset.name;
+            const specialty = card.dataset.specialty;
+            return name.includes(searchTerm) || specialty.includes(searchTerm);
+        });
+
+        // Sıralama
+        visibleCards.sort((a, b) => {
+            const nameA = a.dataset.name;
+            const nameB = b.dataset.name;
+            
+            switch(sortOption) {
+                case 'name-desc':
+                    return nameB.localeCompare(nameA, 'tr');
+                case 'name-asc':
+                default:
+                    return nameA.localeCompare(nameB, 'tr');
+            }
+        });
+
+        // Kartları gizle/göster
+        studentCards.forEach(card => {
+            card.style.display = 'none';
+        });
+
+        if (visibleCards.length === 0) {
+            noResults.style.display = 'block';
+        } else {
+            noResults.style.display = 'none';
+            visibleCards.forEach((card, index) => {
+                card.style.display = 'block';
+                card.style.order = index;
+            });
+        }
+    }
+
+    // Event listeners
+    searchInput.addEventListener('input', filterAndSort);
+    sortSelect.addEventListener('change', filterAndSort);
+
+    // Arama inputuna focus olduğunda animasyon
+    searchInput.addEventListener('focus', function() {
+        this.parentElement.style.transform = 'scale(1.02)';
+    });
+
+    searchInput.addEventListener('blur', function() {
+        this.parentElement.style.transform = 'scale(1)';
+    });
+});
+</script>
 {% endblock %}

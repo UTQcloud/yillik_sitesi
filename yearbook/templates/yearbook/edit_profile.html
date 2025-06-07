@@ -2,45 +2,160 @@
 
 {% block content %}
 <div class="container mt-5">
-    <h2>Profilini Düzenle</h2>
-    <p>Mezuniyet yıllığı için bilgilerini buradan güncelleyebilirsin.</p>
-    <hr>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="mb-3">
-            <label class="form-label">İsim</label>
-            {{ form.first_name }}
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Başlık Kartı -->
+            <div class="hero-section p-4 mb-4 text-center fade-in-up">
+                <h2 class="text-gradient mb-2">
+                    <i class="fas fa-user-edit me-2"></i>Profilini Düzenle
+                </h2>
+                <p class="hero-description mb-0">
+                    Mezuniyet yıllığı için bilgilerini buradan güncelleyebilirsin
+                </p>
+            </div>
+
+            <!-- Form Kartı -->
+            <div class="form-card slide-in-left">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle me-2"></i>Kişisel Bilgiler
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <!-- İsim Soyisim -->
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">
+                                    <i class="fas fa-user me-1"></i>İsim
+                                </label>
+                                {{ form.first_name }}
+                                {% if form.first_name.help_text %}
+                                    <div class="form-text">{{ form.first_name.help_text }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">
+                                    <i class="fas fa-user me-1"></i>Soyisim
+                                </label>
+                                {{ form.last_name }}
+                                {% if form.last_name.help_text %}
+                                    <div class="form-text">{{ form.last_name.help_text }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <!-- Profil Fotoğrafı -->
+                        <div class="mb-4">
+                            <label class="form-label">
+                                <i class="fas fa-camera me-1"></i>{{ form.profile_picture.label }}
+                            </label>
+                            {{ form.profile_picture }}
+                            {% if form.profile_picture.help_text %}
+                                <div class="form-text">{{ form.profile_picture.help_text }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Akademik Bilgiler -->
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">
+                                    <i class="fas fa-stethoscope me-1"></i>{{ form.future_specialization.label }}
+                                </label>
+                                {{ form.future_specialization }}
+                                {% if form.future_specialization.help_text %}
+                                    <div class="form-text">{{ form.future_specialization.help_text }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">
+                                    <i class="fas fa-star me-1"></i>{{ form.favorite_rotation.label }}
+                                </label>
+                                {{ form.favorite_rotation }}
+                                {% if form.favorite_rotation.help_text %}
+                                    <div class="form-text">{{ form.favorite_rotation.help_text }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Unutulmaz Anı -->
+                        <div class="mb-4">
+                            <label class="form-label">
+                                <i class="fas fa-lightbulb me-1"></i>{{ form.memorable_moment.label }}
+                            </label>
+                            {{ form.memorable_moment }}
+                            {% if form.memorable_moment.help_text %}
+                                <div class="form-text">{{ form.memorable_moment.help_text }}</div>
+                            {% endif %}
+                        </div>
+
+                        <hr class="my-4">
+
+                        <!-- Ek Fotoğraflar -->
+                        <h6 class="text-muted mb-3">
+                            <i class="fas fa-images me-2"></i>Ek Fotoğraflar
+                        </h6>
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">
+                                    <i class="fas fa-user-md me-1"></i>{{ form.white_coat_photo.label }}
+                                </label>
+                                {{ form.white_coat_photo }}
+                                {% if form.white_coat_photo.help_text %}
+                                    <div class="form-text">{{ form.white_coat_photo.help_text }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">
+                                    <i class="fas fa-heart me-1"></i>{{ form.your_choice_photo.label }}
+                                </label>
+                                {{ form.your_choice_photo }}
+                                {% if form.your_choice_photo.help_text %}
+                                    <div class="form-text">{{ form.your_choice_photo.help_text }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Form Hataları -->
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger mt-3">
+                                {% for error in form.non_field_errors %}
+                                    <div><i class="fas fa-exclamation-triangle me-2"></i>{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        <!-- Butonlar -->
+                        <div class="d-flex gap-3 mt-4 pt-3 border-top">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Değişiklikleri Kaydet
+                            </button>
+                            <a href="{% url 'home' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-2"></i>İptal
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Bilgi Kartı -->
+            <div class="alert alert-info mt-4">
+                <h6 class="alert-heading">
+                    <i class="fas fa-lightbulb me-2"></i>İpuçları
+                </h6>
+                <ul class="mb-0">
+                    <li>Profil fotoğrafınız için net ve yakın çekim bir fotoğraf seçin</li>
+                    <li>Beyaz önlük töreni fotoğrafınızı eklemeyi unutmayın</li>
+                    <li>Unutulmaz anınızı detaylı bir şekilde yazın, bu yıllığın en güzel kısmı olacak</li>
+                    <li>Tüm alanları doldurmanız zorunlu değil, istediğiniz kadarını paylaşabilirsiniz</li>
+                </ul>
+            </div>
         </div>
-         <div class="mb-3">
-            <label class="form-label">Soyisim</label>
-            {{ form.last_name }}
-        </div>
-        <div class="mb-3">
-            <label class="form-label">{{ form.profile_picture.label }}</label>
-            {{ form.profile_picture }}
-        </div>
-        <div class="mb-3">
-            <label class="form-label">{{ form.future_specialization.label }}</label>
-            {{ form.future_specialization }}
-        </div>
-        <div class="mb-3">
-            <label class="form-label">{{ form.favorite_rotation.label }}</label>
-            {{ form.favorite_rotation }}
-        </div>
-        <div class="mb-3">
-            <label class="form-label">{{ form.memorable_moment.label }}</label>
-            {{ form.memorable_moment }}
-        </div>
-        <div class="mb-3">
-            <label class="form-label">{{ form.white_coat_photo.label }}</label>
-            {{ form.white_coat_photo }}
-        </div>
-        <div class="mb-3">
-            <label class="form-label">{{ form.your_choice_photo.label }}</label>
-            {{ form.your_choice_photo }}
-        </div>
-        
-        <button type="submit" class="btn btn-primary">Kaydet</button>
-    </form>
+    </div>
 </div>
 {% endblock %}

@@ -40,6 +40,8 @@ body {
     line-height: 1.6;
     font-weight: 400;
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 /* ===== NAVBAR STİLLERİ ===== */
@@ -48,6 +50,9 @@ body {
     box-shadow: var(--shadow-md);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+main {
+    flex-grow: 1;
 }
 
 .navbar-brand {

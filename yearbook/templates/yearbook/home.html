@@ -4,12 +4,22 @@
 <!-- Hero Section -->
 <div class="container mt-5">
     <div class="hero-section p-5 mb-5 fade-in-up">
+        <div class="d-flex flex-wrap gap-3">
+            {% if not user.is_authenticated %}
+                <a href="{% url 'register' %}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-user-plus me-2"></i>Hemen Kayıt Ol
+                </a>
+                <a href="{% url 'login' %}" class="btn btn-outline-primary btn-lg">
+                    <i class="fas fa-sign-in-alt me-2"></i>Giriş Yap
+                </a>
+            {% endif %}
+        </div>
         <div class="row align-items-center">
             <div class="col-lg-6">
                 <h1 class="display-5 text-gradient mb-4">
                     <i class="fas fa-graduation-cap me-3"></i>
                     KOÜ Tıp Fakültesi<br>
-                    <span class="text-primary">2025 Mezunları</span>
+                    <span class="text-primary">2025 <Mezunları</span>
                 </h1>
                 <p class="hero-description mb-4">
                     Kocaeli Üniversitesi Tıp Fakültesi 2025 mezunlarının dijital yıllığına hoş geldiniz. 

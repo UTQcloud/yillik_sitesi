@@ -37,6 +37,36 @@
                 
                 <ul class="navbar-nav">
                     {% if user.is_authenticated %}
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav me-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'home' %}">
+                                    <i class="fas fa-home me-1"></i>Anasayfa
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'student_list' %}">
+                                    <i class="fas fa-users me-1"></i>Mezunlar
+                                </a>
+                            </li>
+                            </ul>
+                        
+                        <ul class="navbar-nav">
+                            {% if user.is_authenticated %}
+                                {% else %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'login' %}">
+                                        <i class="fas fa-sign-in-alt me-1"></i>Giriş Yap
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'register' %}">
+                                        <i class="fas fa-user-plus me-1"></i>Kayıt Ol
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                                 <i class="fas fa-user me-1"></i>

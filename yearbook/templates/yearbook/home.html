@@ -17,9 +17,7 @@
                     ve mezuniyet sonrası da iletişimi sürdürebilirsiniz.
                 </p>
                 <div class="d-flex flex-wrap gap-3">
-                    <a href="{% url 'student_list' %}" class="btn btn-primary btn-lg">
-                        <i class="fas fa-users me-2"></i>Mezunları Gör
-                    </a>
+                    
                     {% if not user.is_authenticated %}
                         <a href="{% url 'register' %}" class="btn btn-outline-primary btn-lg">
                             <i class="fas fa-user-plus me-2"></i>Kayıt Ol
@@ -211,18 +209,9 @@
                     Tıp fakültesi yolculuğunda birlikte yaşadığımız anıları paylaşarak, 
                     mezuniyet sonrası da bağlarımızı güçlü tutalım.
                 </p>
-                {% if user.is_authenticated %}
-                    <a href="{% url 'student_list' %}" class="btn btn-light btn-lg">
-                        <i class="fas fa-search me-2"></i>Arkadaşlarını Bul
-                    </a>
-                {% else %}
-                    <a href="{% url 'register' %}" class="btn btn-light btn-lg me-3">
-                        <i class="fas fa-user-plus me-2"></i>Hemen Kayıt Ol
-                    </a>
-                    <a href="{% url 'login' %}" class="btn btn-outline-light btn-lg">
-                        <i class="fas fa-sign-in-alt me-2"></i>Giriş Yap
-                    </a>
-                {% endif %}
+               
+                   
+                
             </div>
         </div>
     </div>

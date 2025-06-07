@@ -53,6 +53,14 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'yillik_sitesi.urls'
+LANGUAGE_CODE = 'tr-tr' # 'en-us' yerine 'tr-tr'
+
+TIME_ZONE = 'Europe/Istanbul' # 'UTC' yerine 'Europe/Istanbul'
+
+USE_I18N = True
+
+USE_TZ = True
+
 
 TEMPLATES = [
     {

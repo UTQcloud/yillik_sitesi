@@ -1,5 +1,6 @@
 # yearbook/views.py
 
+from django.db.models import Count, Q
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
@@ -8,11 +9,25 @@ from django.contrib import messages
 from .models import Student, Memory
 from .forms import CustomUserCreationForm, StudentProfileForm, MemoryForm
 
-# ... (diğer view fonksiyonlarınız burada yer alıyor, onlarda bir değişiklik yok) ...
+# yearbook/views.py
 
 def home(request):
-    students = Student.objects.all().order_by('last_name', 'first_name')
-    context = {'students': students}
+    # İstatistikler için verileri çek
+    total_students = Student.objects.count()
+    total_memories = Memory.objects.filter(is_approved=True).count()
+
+    # Son eklenen 4 mezunu al
+    recent_students = Student.objects.order_by('-user__date_joined')[:4]
+
+    # Son eklenen ve onaylanmış 2 anıyı al
+    recent_memories = Memory.objects.filter(is_approved=True).order_by('-created_at')[:2]
+
+    context = {
+        'total_students': total_students,
+        'total_memories': total_memories,
+        'recent_students': recent_students,
+        'recent_memories': recent_memories,
+    }
     return render(request, 'yearbook/home.html', context)
 
 def student_detail(request, student_id):
@@ -48,6 +63,17 @@ def student_detail(request, student_id):
         'has_commented': has_commented,
     }
     return render(request, 'yearbook/student_detail.html', context)
+
+def student_list(request):
+    # 'models.Q' yerine sadece 'Q' kullan
+    students = Student.objects.annotate(
+        memory_count=Count('memories', filter=Q(memories__is_approved=True))
+    ).order_by('first_name', 'last_name')
+
+    context = {
+        'students': students
+    }
+    return render(request, 'yearbook/student_list.html', context)
 
 def register_view(request):
     if request.method == 'POST':

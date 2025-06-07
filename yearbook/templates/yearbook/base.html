@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -18,10 +19,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container">
-            <a class="navbar-brand" href="{% url 'home' %}">
-                <i class="fas fa-graduation-cap me-2"></i>
-                KOÜ Tıp 2025
-            </a>
+            
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -34,11 +32,7 @@
                             <i class="fas fa-home me-1"></i>Anasayfa
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'student_list' %}">
-                            <i class="fas fa-users me-1"></i>Mezunlar
-                        </a>
-                    </li>
+                   
                 </ul>
                 
                 <ul class="navbar-nav">

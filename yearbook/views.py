@@ -8,6 +8,8 @@ from django.contrib import messages
 from .models import Student, Memory
 from .forms import CustomUserCreationForm, StudentProfileForm, MemoryForm
 
+# ... (diğer view fonksiyonlarınız burada yer alıyor, onlarda bir değişiklik yok) ...
+
 def home(request):
     students = Student.objects.all().order_by('last_name', 'first_name')
     context = {'students': students}
@@ -17,11 +19,8 @@ def student_detail(request, student_id):
     student = get_object_or_404(Student, id=student_id)
     memories = Memory.objects.filter(student=student, is_approved=True).order_by('-created_at')
     
-    # has_commented varsayılan olarak False
     has_commented = False
     if request.user.is_authenticated:
-        # Silinen kayıt veritabanında olmayacağı için .exists() False döndürecektir.
-        # Bu mantık, anı silindiğinde formun tekrar görünmesini sağlar.
         if Memory.objects.filter(student=student, author=request.user).exists():
             has_commented = True
 
@@ -56,7 +55,6 @@ def register_view(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            # Yeni kullanıcıya boş bir Student profili oluştur
             Student.objects.create(user=user, first_name=user.first_name, last_name=user.last_name)
             return redirect('edit_profile')
     else:
@@ -83,7 +81,6 @@ def logout_view(request):
 
 @login_required
 def edit_profile_view(request):
-    # Kullanıcının Student profilini getir veya yoksa oluştur
     student, created = Student.objects.get_or_create(user=request.user)
     
     if request.method == 'POST':
@@ -95,3 +92,43 @@ def edit_profile_view(request):
         form = StudentProfileForm(instance=student)
         
     return render(request, 'yearbook/edit_profile.html', {'form': form})
+
+@login_required
+def edit_memory_view(request, memory_id):
+    memory = get_object_or_404(Memory, id=memory_id)
+    
+    if memory.author != request.user:
+        messages.error(request, "Bu anıyı düzenleme yetkiniz yok.")
+        return redirect('student_detail', student_id=memory.student.id)
+
+    if request.method == 'POST':
+        form = MemoryForm(request.POST, instance=memory)
+        if form.is_valid():
+            edited_memory = form.save(commit=False)
+            edited_memory.is_approved = False
+            edited_memory.save()
+            messages.success(request, 'Anınız güncellendi ve yeniden onay için yöneticiye gönderildi.')
+            return redirect('student_detail', student_id=memory.student.id)
+    else:
+        form = MemoryForm(instance=memory)
+        
+    context = {
+        'form': form,
+        'student': memory.student
+    }
+    return render(request, 'yearbook/edit_memory.html', context)
+
+@login_required
+def delete_memory_view(request, memory_id):
+    memory = get_object_or_404(Memory, id=memory_id)
+    
+    if memory.author != request.user:
+        messages.error(request, "Bu anıyı silme yetkiniz yok.")
+        return redirect('student_detail', student_id=memory.student.id)
+
+    if request.method == 'POST':
+        memory.delete()
+        messages.success(request, 'Anınız başarıyla silindi.')
+        return redirect('student_detail', student_id=memory.student.id)
+    
+    return render(request, 'yearbook/confirm_delete_memory.html', {'memory': memory})

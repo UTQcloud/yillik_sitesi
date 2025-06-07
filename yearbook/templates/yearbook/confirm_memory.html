@@ -1,0 +1,19 @@
+{% extends 'yearbook/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Anıyı Silmeyi Onayla</h2>
+    <hr>
+    <p><strong>{{ memory.student.first_name }}</strong> hakkındaki aşağıdaki anıyı kalıcı olarak silmek istediğinizden emin misiniz?</p>
+    
+    <div class="alert alert-danger">
+        <p class="mb-0">"{{ memory.text|linebreaksbr }}"</p>
+    </div>
+    
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Evet, Sil</button>
+        <a href="{% url 'student_detail' memory.student.id %}" class="btn btn-secondary">Hayır, Geri Dön</a>
+    </form>
+</div>
+{% endblock %}

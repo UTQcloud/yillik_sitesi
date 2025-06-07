@@ -39,22 +39,29 @@
         </div>
     </div>
 
-    <<hr class="my-5">
+    <hr class="my-5">
 
     <h2 class="mb-4">Hakkında Yazılan Anılar</h2>
     
-    {% if user.is_authenticated %}
-        <div class="card mb-4">
-            <div class="card-body">
-                <h5 class="card-title">{{ student.first_name }} için bir anı bırak</h5>
-                <form method="post">
-                    {% csrf_token %}
-                    {{ memory_form.as_p }}
-                    <button type="submit" class="btn btn-primary mt-2">Gönder</button>
-                </form>
+    {% if user.is_authenticated and user != student.user %}
+        {% if not has_commented %}
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">{{ student.first_name }} için bir anı bırak</h5>
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ memory_form.as_p }}
+                        <button type="submit" class="btn btn-primary mt-2">Gönder</button>
+                    </form>
+                </div>
             </div>
-        </div>
-    {% else %}
+        {% else %}
+            <div class="alert alert-warning">
+                Bu kişi için zaten bir anı bıraktınız.
+            </div>
+        {% endif %}
+
+    {% elif not user.is_authenticated %}
         <div class="alert alert-info">
             Anı bırakabilmek için lütfen <a href="{% url 'login' %}">giriş yapın</a>.
         </div>

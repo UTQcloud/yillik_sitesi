@@ -4,6 +4,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib import messages
 from .models import Student, Memory
 from .forms import CustomUserCreationForm, StudentProfileForm, MemoryForm
 
@@ -16,15 +17,27 @@ def student_detail(request, student_id):
     student = get_object_or_404(Student, id=student_id)
     memories = Memory.objects.filter(student=student, is_approved=True).order_by('-created_at')
     
-    # Anı ekleme formu
+    # has_commented varsayılan olarak False
+    has_commented = False
+    if request.user.is_authenticated:
+        # Silinen kayıt veritabanında olmayacağı için .exists() False döndürecektir.
+        # Bu mantık, anı silindiğinde formun tekrar görünmesini sağlar.
+        if Memory.objects.filter(student=student, author=request.user).exists():
+            has_commented = True
+
     if request.method == 'POST' and request.user.is_authenticated:
-        memory_form = MemoryForm(request.POST)
-        if memory_form.is_valid():
-            new_memory = memory_form.save(commit=False)
-            new_memory.student = student
-            new_memory.author = request.user
-            new_memory.save()
-            # Başarılı mesajı eklenebilir.
+        if not has_commented:
+            memory_form = MemoryForm(request.POST)
+            if memory_form.is_valid():
+                new_memory = memory_form.save(commit=False)
+                new_memory.student = student
+                new_memory.author = request.user
+                new_memory.is_approved = False
+                new_memory.save()
+                messages.success(request, 'Anınız başarıyla gönderildi ve onay bekliyor.')
+                return redirect('student_detail', student_id=student.id)
+        else:
+            messages.warning(request, 'Bu kişi için zaten bir anı bıraktınız.')
             return redirect('student_detail', student_id=student.id)
     else:
         memory_form = MemoryForm()
@@ -32,7 +45,8 @@ def student_detail(request, student_id):
     context = {
         'student': student,
         'memories': memories,
-        'memory_form': memory_form
+        'memory_form': memory_form,
+        'has_commented': has_commented,
     }
     return render(request, 'yearbook/student_detail.html', context)
 

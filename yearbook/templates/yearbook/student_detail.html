@@ -1,0 +1,25 @@
+{% extends 'yearbook/base.html' %}
+
+{% block content %}
+    <h1>{{ student.first_name }} {{ student.last_name }}</h1>
+    {% if student.profile_picture %}
+        <img src="{{ student.profile_picture.url }}" alt="{{ student.first_name }}" width="250">
+    {% endif %}
+
+    <h2>Hakkında</h2>
+    <p>{{ student.bio|linebreaks }}</p>
+
+    <hr>
+
+    <h2>Anılar</h2>
+    {% for memory in memories %}
+        <div>
+            <p>"{{ memory.text }}"</p>
+            <small>- {{ memory.author.username }}</small>
+        </div>
+        <hr>
+    {% empty %}
+        <p>Henüz hakkında bir anı yazılmamış.</p>
+    {% endfor %}
+
+    {% endblock %}

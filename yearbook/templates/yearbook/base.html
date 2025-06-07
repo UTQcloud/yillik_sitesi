@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>2025 Mezunları Yıllığı</title>
+    </head>
+<body>
+    <nav>
+        <a href="{% url 'home' %}">Ana Sayfa</a> |
+        <a href="{% url 'class_list' %}">Sınıflar</a>
+    </nav>
+    <hr>
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+</body>
+</html>

@@ -1,0 +1,19 @@
+{% extends 'yearbook/base.html' %}
+
+{% block content %}
+    <h1>{{ school_class.name }} Sınıfı Öğrencileri</h1>
+    <div class="student-grid">
+    {% for student in students %}
+        <div>
+            <a href="{% url 'student_detail' student.id %}">
+                {% if student.profile_picture %}
+                    <img src="{{ student.profile_picture.url }}" alt="{{ student.first_name }}" width="150">
+                {% endif %}
+                <p>{{ student.first_name }} {{ student.last_name }}</p>
+            </a>
+        </div>
+    {% empty %}
+        <p>Bu sınıfta henüz öğrenci yok.</p>
+    {% endfor %}
+    </div>
+{% endblock %}

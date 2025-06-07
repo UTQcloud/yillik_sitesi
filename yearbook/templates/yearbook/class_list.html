@@ -1,0 +1,14 @@
+{% extends 'yearbook/base.html' %}
+
+{% block content %}
+    <h1>Sınıflar</h1>
+    <ul>
+        {% for class in classes %}
+            <li>
+                <a href="{% url 'student_list' class.id %}">{{ class.name }} ({{ class.year }})</a>
+            </li>
+        {% empty %}
+            <li>Henüz bir sınıf eklenmemiş.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

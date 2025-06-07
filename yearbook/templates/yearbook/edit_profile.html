@@ -1,0 +1,46 @@
+{% extends 'yearbook/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Profilini Düzenle</h2>
+    <p>Mezuniyet yıllığı için bilgilerini buradan güncelleyebilirsin.</p>
+    <hr>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label class="form-label">İsim</label>
+            {{ form.first_name }}
+        </div>
+         <div class="mb-3">
+            <label class="form-label">Soyisim</label>
+            {{ form.last_name }}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">{{ form.profile_picture.label }}</label>
+            {{ form.profile_picture }}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">{{ form.future_specialization.label }}</label>
+            {{ form.future_specialization }}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">{{ form.favorite_rotation.label }}</label>
+            {{ form.favorite_rotation }}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">{{ form.memorable_moment.label }}</label>
+            {{ form.memorable_moment }}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">{{ form.white_coat_photo.label }}</label>
+            {{ form.white_coat_photo }}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">{{ form.your_choice_photo.label }}</label>
+            {{ form.your_choice_photo }}
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Kaydet</button>
+    </form>
+</div>
+{% endblock %}
